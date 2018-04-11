@@ -23,9 +23,9 @@ class ThumbnailGallery extends React.Component {
     document.removeEventListener('click', this.handleGlobalClick);
   }
 
-  openImage = ({ currentTarget: { dataset: { imageIndex, imageData } } }) => {
+  openImage = ({ currentTarget: { dataset: { imageIndex, imagesData } } }) => {
     const { isOpen } = this.state;
-    const arrayData = imageData.split(',').map((item, idx) => {
+    const imageData = imagesData.split(',').map((item, idx) => {
       return item.replace(/\_thumbnail/, '');
     });
 
@@ -33,7 +33,8 @@ class ThumbnailGallery extends React.Component {
       this.setState({
         isOpen: true,
         index: parseInt(imageIndex),
-        imageData: arrayData
+        imageLength: imageData.length,
+        imageData
       });
     }
   };
@@ -45,9 +46,9 @@ class ThumbnailGallery extends React.Component {
   };
 
   nextImage = () => {
-    const { index } = this.state;
+    const { index, imageLength } = this.state;
     this.setState({
-      index: index + 1
+      index: (index + 1) % imageLength
     });
   };
 
@@ -64,7 +65,6 @@ class ThumbnailGallery extends React.Component {
         index: index - 1
       });
     }
-    console.log(index);
   };
 
   isTargetClassName = (targetElement, list) => {
@@ -111,12 +111,13 @@ class ThumbnailGallery extends React.Component {
 
   render() {
     const { isOpen, index, imageData } = this.state;
+
     /**
      * TODO: Optional: If the folders are separate, create a thumbnail src folder for thumbnails and
      * imageSrcd folder for the image files
      *
      * Create a src prop that contains both the thumbnails and images in a single folder
-     * 
+     *
      * TODO: Do some refactoring
      */
 
@@ -127,19 +128,21 @@ class ThumbnailGallery extends React.Component {
           onClick={this.openImage}
           key={index}
           data-image-index={index}
-          data-image-length={array.length}
-          data-image-data={array}
+          data-images-data={array}
         >
           <img src={`${src}${list}`} className="responsive-img image" />
         </div>
       ));
 
-    const Lightbox = ({ onLeftArrowClick, onRightArrowClick }) =>
+    const Lightbox = ({ imageViewSrc, onLeftArrowClick, onRightArrowClick }) =>
       isOpen && (
         <div>
           <div className="lightbox-container">
             <div className="lightbox-img-container">
-              <img src={`../Images/${imageData[index]}`} className="lightbox-img" />
+              <img
+                src={`${imageViewSrc}${imageData[index]}`}
+                className="lightbox-img"
+              />
             </div>
             <div className="navigation-container">
               <i
@@ -167,6 +170,7 @@ class ThumbnailGallery extends React.Component {
         <Lightbox
           onLeftArrowClick={this.onLeftArrowClick}
           onRightArrowClick={this.onRightArrowClick}
+          imageViewSrc={'../Images/'}
         />
       </div>
     );
