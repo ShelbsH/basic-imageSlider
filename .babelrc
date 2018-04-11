@@ -1,5 +1,5 @@
 {
-  "presets": ["env", "react"],
+  "presets": ["env", "react", "stage-0"],
   "env": {
     "tests": {
       "plugins": ["transform-es2015-modules-commonjs", "react-hot-loader/babel"]

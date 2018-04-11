@@ -7,6 +7,7 @@ const app = express();
 //=============================================
 // Regular dependency tools for express
 const path = require('path');
+const morgan = require('morgan');
 
 //=============================================
 // Port number for when the application is running
@@ -32,6 +33,10 @@ app.use(webpackDevMiddleware(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler));
 
+//=============================================
+// Morgan Logger
+app.use(morgan('combined'));
+
 //Sets the file path directory to load up scripts and styles from the HTML file.
 app.use(express.static(filePath));
 
@@ -42,8 +47,7 @@ app.get('/', (req, res) => {
 
 //Send image files based on GET request.
 app.get(/^\/.*\.(png|jpg)$/, (req, res) => {
-  const imgFile = req.url.slice(req.url.lastIndexOf('/') + 1);
-  res.sendFile(path.join(__dirname, `images/${imgFile}`));
+  res.sendFile(path.join(__dirname, req.url));
 });
 
 //Run the application on PORT, 8000.

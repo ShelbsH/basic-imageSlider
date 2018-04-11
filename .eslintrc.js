@@ -1,23 +1,17 @@
 module.exports = {
-  env: {
-    browser: true,
-    es6: true,
-    node: true,
-    jest: true
-  },
-  extends: ["eslint:recommended", "plugin:react/recommended"],
-  parserOptions: {
-    ecmaFeatures: {
-      experimentalObjectRestSpread: true,
-      jsx: true
-    },
-    sourceType: "module"
-  },
-  plugins: ["react"],
+  root: true,
+  extends: 'babel',
+  plugins: ['prettier'],
+  parser: 'babel-eslint',
   rules: {
-    indent: ["error", 2],
-    "linebreak-style": ["error", "unix"],
-    quotes: ["error", "single"],
-    semi: ["error", "always"]
+    'no-var': 0,
+    'max-len': 0,
+    strict: 0,
+    'prettier/prettier': 'error'
+  },
+  env: {
+    node: true,
+    mocha: true,
+    jest: true
   }
 };
