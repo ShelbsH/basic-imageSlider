@@ -4,14 +4,14 @@ import ReactDOM from 'react-dom';
 import '../styles/components/Thumbnail_Gallery.scss';
 
 class ThumbnailGallery extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       index: null,
       isOpen: false,
       imageLength: null,
-      imageData: null
+      lightboxImages: props.lightboxImages
     };
   }
 
@@ -23,18 +23,14 @@ class ThumbnailGallery extends React.Component {
     document.removeEventListener('click', this.handleGlobalClick);
   }
 
-  openImage = ({ currentTarget: { dataset: { imageIndex, imagesData } } }) => {
-    const { isOpen } = this.state;
-    const imageData = imagesData.split(',').map((item, idx) => {
-      return item.replace(/\_thumbnail/, '');
-    });
+  openImage = ({ currentTarget: { dataset: { imageIndex } } }) => {
+    const { isOpen, lightboxImages } = this.state;
 
     if (!isOpen) {
       this.setState({
         isOpen: true,
         index: parseInt(imageIndex),
-        imageLength: imageData.length,
-        imageData
+        imageLength: lightboxImages.length
       });
     }
   };
@@ -110,7 +106,7 @@ class ThumbnailGallery extends React.Component {
   };
 
   render() {
-    const { isOpen, index, imageData } = this.state;
+    const { isOpen, index, imageData, data } = this.state;
 
     /**
      * TODO: Optional: If the folders are separate, create a thumbnail src folder for thumbnails and
@@ -121,39 +117,24 @@ class ThumbnailGallery extends React.Component {
      * TODO: Do some refactoring
      */
 
-    const Thumbnails = ({ thumbnailImages, src }) =>
-      thumbnailImages.map((list, index, array) => (
-        <div
-          className="cell"
-          onClick={this.openImage}
-          key={index}
-          data-image-index={index}
-          data-images-data={array}
-        >
-          <img src={`${src}${list}`} className="responsive-img image" />
-        </div>
-      ));
-
-    const Lightbox = ({ imageViewSrc, onLeftArrowClick, onRightArrowClick }) =>
+    const Lightbox = ({ imageViewSrc, lightboxImages, onLeftArrowClick, onRightArrowClick }) =>
       isOpen && (
-        <div>
-          <div className="lightbox-container">
-            <div className="lightbox-img-container">
-              <img
-                src={`${imageViewSrc}${imageData[index]}`}
-                className="lightbox-img"
-              />
-            </div>
-            <div className="navigation-container">
-              <i
-                className="icon-keyboard_arrow_left"
-                onClick={onLeftArrowClick}
-              />
-              <i
-                className="icon-keyboard_arrow_right"
-                onClick={onRightArrowClick}
-              />
-            </div>
+        <div className="lightbox-container">
+          <div className="lightbox-img-container">
+            <img
+              src={`${imageViewSrc}${lightboxImages}`}
+              className="lightbox-img"
+            />
+          </div>
+          <div className="navigation-container">
+            <i
+              className="icon-keyboard_arrow_left"
+              onClick={onLeftArrowClick}
+            />
+            <i
+              className="icon-keyboard_arrow_right"
+              onClick={onRightArrowClick}
+            />
           </div>
           <div className="lightbox-overlay" />
         </div>
@@ -162,15 +143,22 @@ class ThumbnailGallery extends React.Component {
     return (
       <div className="thumbnail-container">
         <div className="grid">
-          <Thumbnails
-            thumbnailImages={this.props.thumbnailImages}
-            src={this.props.src}
-          />
+          {this.props.thumbnailImages.map((list, index, array) => (
+            <div
+              className="cell"
+              onClick={this.openImage}
+              key={index}
+              data-image-index={index}
+            >
+              <img src={`${this.props.thumbnailSrc}${list}`} className="responsive-img image" />
+            </div>
+          ))}
         </div>
         <Lightbox
           onLeftArrowClick={this.onLeftArrowClick}
           onRightArrowClick={this.onRightArrowClick}
           imageViewSrc={'../Images/'}
+          lightboxImages={this.props.lightboxImages[index]}
         />
       </div>
     );

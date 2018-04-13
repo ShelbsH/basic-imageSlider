@@ -56,28 +56,26 @@
       display: block;
     }
   }
-}
-
-.lightbox-overlay {
-  width: 100%;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #383636;
-  opacity: 0.7;
-}
-
-.navigation-container {
-  .icon-keyboard_arrow_left {
-    z-index: auto;
-    @include icon-arrow-position();
-    left: 0;
+  .navigation-container {
+    .icon-keyboard_arrow_left {
+      z-index: auto;
+      @include icon-arrow-position();
+      left: 0;
+    }
+    .icon-keyboard_arrow_right {
+      @include icon-arrow-position();
+      right: 0;
+    }
   }
-  .icon-keyboard_arrow_right {
-    @include icon-arrow-position();
+  .lightbox-overlay {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
     right: 0;
+    background-color: #383636;
+    opacity: 0.7;
   }
 }
 
