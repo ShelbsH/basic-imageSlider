@@ -14,7 +14,8 @@ export default class App extends React.Component {
         <div className="gallery-container">
           <h2 className="header">Thumbnail Gallery Demo</h2>
           <ThumbnailGallery
-            thumbnailSrc="../Images/thumbnails/"
+            thumbnailImagesSrc="../Images/thumbnails/"
+            lightboxImagesSrc="../Images/"
             thumbnailImages={[
               'blessthefall_thumbnail.png',
               'The_Amity_Affliction_thumbnail.png',
