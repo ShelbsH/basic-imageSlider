@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 import '../styles/components/Thumbnail_Gallery.scss';
 
 class ThumbnailGallery extends React.Component {
@@ -43,6 +42,7 @@ class ThumbnailGallery extends React.Component {
 
   nextImage = () => {
     const { index, imageLength } = this.state;
+
     this.setState({
       index: (index + 1) % imageLength
     });
@@ -106,23 +106,15 @@ class ThumbnailGallery extends React.Component {
   };
 
   render() {
+    const { lightboxImagesSrc, lightboxImages, thumbnailImagesSrc, thumbnailImages } = this.props;
     const { isOpen, index, imageData, data } = this.state;
 
-    /**
-     * TODO: Optional: If the folders are separate, create a thumbnail src folder for thumbnails and
-     * imageSrcd folder for the image files
-     *
-     * Create a src prop that contains both the thumbnails and images in a single folder
-     *
-     * TODO: Do some refactoring
-     */
-
-    const Lightbox = ({ imageViewSrc, lightboxImages, onLeftArrowClick, onRightArrowClick }) =>
+    const Lightbox = ({ lightboxImagesSrc, lightboxImages, onLeftArrowClick, onRightArrowClick }) =>
       isOpen && (
         <div className="lightbox-container">
           <div className="lightbox-img-container">
             <img
-              src={`${imageViewSrc}${lightboxImages}`}
+              src={`${lightboxImagesSrc}${lightboxImages}`}
               className="lightbox-img"
             />
           </div>
@@ -143,22 +135,25 @@ class ThumbnailGallery extends React.Component {
     return (
       <div className="thumbnail-container">
         <div className="grid">
-          {this.props.thumbnailImages.map((list, index, array) => (
+          {thumbnailImages.map((list, index, array) => (
             <div
               className="cell"
               onClick={this.openImage}
               key={index}
               data-image-index={index}
             >
-              <img src={`${this.props.thumbnailSrc}${list}`} className="responsive-img image" />
+              <img
+                src={`${thumbnailImagesSrc}${list}`}
+                className="responsive-img image"
+              />
             </div>
           ))}
         </div>
         <Lightbox
           onLeftArrowClick={this.onLeftArrowClick}
           onRightArrowClick={this.onRightArrowClick}
-          imageViewSrc={'../Images/'}
-          lightboxImages={this.props.lightboxImages[index]}
+          lightboxImagesSrc={lightboxImagesSrc || thumbnailImages}
+          lightboxImages={lightboxImages[index]}
         />
       </div>
     );
