@@ -10,12 +10,19 @@ class ThumbnailGallery extends React.Component {
       index: null,
       isOpen: false,
       imageLength: null,
-      lightboxImages: props.lightboxImages
+      lightboxImages: props.lightboxImages,
+      isRepeat: false
     };
   }
 
   componentWillMount() {
     document.addEventListener('click', this.handleGlobalClick);
+
+    if (this.props.repeat) {
+      this.setState({
+        isRepeat: true
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -105,9 +112,42 @@ class ThumbnailGallery extends React.Component {
     }
   };
 
+  matchIndex = (currentIndex, imageIndex) => currentIndex === imageIndex;
+
   render() {
     const { lightboxImagesSrc, lightboxImages, thumbnailImagesSrc, thumbnailImages } = this.props;
-    const { isOpen, index, imageData, data } = this.state;
+    const { isOpen, index, imageLength, isRepeat } = this.state;
+
+    const Arrow = ({ onArrowClick, arrowClass }) => (
+      <i 
+        className={arrowClass} 
+        onClick={onArrowClick} 
+      />
+    )
+
+    const LeftArrow = ({ onArrowLeftClick }) => (
+      <Arrow arrowClass="icon-keyboard_arrow_left" 
+        onArrowClick={onArrowLeftClick} 
+      />
+    )
+    const RightArrow = ({ onArrowRightClick }) => (
+      <Arrow 
+        arrowClass="icon-keyboard_arrow_right" 
+        onArrowClick={onArrowRightClick} 
+      />
+    )
+
+    //HOC example
+    const valueMatchLeftIndex = Component => props => (
+        !this.matchIndex(index, 0) && <Component {...props} />
+    );
+
+    const valueMatchRightIndex = Component => props => (
+        !this.matchIndex((index + 1), imageLength) && <Component {...props} />
+    );
+    
+    const ExtendLeftArrow = !isRepeat ? valueMatchLeftIndex(LeftArrow) : LeftArrow;
+    const ExtendRightArrow = !isRepeat ? valueMatchRightIndex(RightArrow) : RightArrow;
 
     const Lightbox = ({ lightboxImagesSrc, lightboxImages, onLeftArrowClick, onRightArrowClick }) =>
       isOpen && (
@@ -119,14 +159,8 @@ class ThumbnailGallery extends React.Component {
             />
           </div>
           <div className="navigation-container">
-            <i
-              className="icon-keyboard_arrow_left"
-              onClick={onLeftArrowClick}
-            />
-            <i
-              className="icon-keyboard_arrow_right"
-              onClick={onRightArrowClick}
-            />
+            <ExtendLeftArrow onArrowLeftClick={onLeftArrowClick}/>
+            <ExtendRightArrow onArrowRightClick={onRightArrowClick}/>
           </div>
           <div className="lightbox-overlay" />
         </div>
