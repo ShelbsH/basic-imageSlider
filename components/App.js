@@ -32,6 +32,7 @@ export default class App extends React.Component {
               'miss_may_i.png',
               'august_burns_red.png'
             ]}
+            repeat={true}
           />
         </div>
       </div>
