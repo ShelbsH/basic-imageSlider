@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import '../styles/components/Thumbnail_Gallery.scss';
+import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants';
 
-class ThumbnailGallery extends React.Component {
+class ThumbnailGallery extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -11,16 +12,16 @@ class ThumbnailGallery extends React.Component {
       isOpen: false,
       imageLength: null,
       lightboxImages: props.lightboxImages,
-      isRepeat: false
+      loopImages: false
     };
   }
 
   componentWillMount() {
     document.addEventListener('click', this.handleGlobalClick);
 
-    if (this.props.repeat) {
+    if (this.props.loopImages) {
       this.setState({
-        isRepeat: true
+        loopImages: true
       });
     }
   }
@@ -29,7 +30,7 @@ class ThumbnailGallery extends React.Component {
     document.removeEventListener('click', this.handleGlobalClick);
   }
 
-  openImage = ({ currentTarget: { dataset: { imageIndex } } }) => {
+  openImage = ({ target, currentTarget: { dataset: { imageIndex } } }) => {
     const { isOpen, lightboxImages } = this.state;
 
     if (!isOpen) {
@@ -49,7 +50,7 @@ class ThumbnailGallery extends React.Component {
 
   nextImage = () => {
     const { index, imageLength } = this.state;
-
+    
     this.setState({
       index: (index + 1) % imageLength
     });
@@ -59,6 +60,7 @@ class ThumbnailGallery extends React.Component {
     const { index, imageLength } = this.state;
     const lastImage = imageLength - 1;
 
+    //Set state to last image to loop the images
     if (index < 1) {
       this.setState({
         index: lastImage
@@ -91,6 +93,11 @@ class ThumbnailGallery extends React.Component {
       'icon-keyboard_arrow_right'
     ];
 
+    /**
+     * Close the displayed image if the click doesn't match
+     * any of the target className elements
+     */
+
     if (isOpen && !isTargetClassName(target, classNames)) {
       closeImage();
     }
@@ -112,13 +119,21 @@ class ThumbnailGallery extends React.Component {
     }
   };
 
+  onLightboxImageLoad = ({ target }) => {
+    /**
+     * TODO: calculate the image dimensions so the image
+     * could fit directly on the screen if the original 
+     * image is bigger than the screen size
+     */
+  }
+
   matchIndex = (currentIndex, imageIndex) => currentIndex === imageIndex;
 
   render() {
     const { lightboxImagesSrc, lightboxImages, thumbnailImagesSrc, thumbnailImages } = this.props;
-    const { isOpen, index, imageLength, isRepeat } = this.state;
+    const { isOpen, index, imageLength, loopImages } = this.state;
 
-    const Arrow = ({ onArrowClick, arrowClass }) => (
+    const Arrow = ({ arrowClass, onArrowClick }) => (
       <i 
         className={arrowClass} 
         onClick={onArrowClick} 
@@ -137,17 +152,21 @@ class ThumbnailGallery extends React.Component {
       />
     )
 
-    //HOC example
-    const valueMatchLeftIndex = Component => props => (
-        !this.matchIndex(index, 0) && <Component {...props} />
+    /**
+     * Use conditional rendering with HOC to determine if the 
+     * current index does not match the first and last index
+     */
+    
+    const currentIndexMatchLeftIndex = Component => props => (
+      !this.matchIndex(index, 0) && <Component {...props} />
     );
 
-    const valueMatchRightIndex = Component => props => (
-        !this.matchIndex((index + 1), imageLength) && <Component {...props} />
+    const currentIndexMatchRightIndex = Component => props => (
+      !this.matchIndex((index + 1), imageLength) && <Component {...props} />
     );
     
-    const ExtendLeftArrow = !isRepeat ? valueMatchLeftIndex(LeftArrow) : LeftArrow;
-    const ExtendRightArrow = !isRepeat ? valueMatchRightIndex(RightArrow) : RightArrow;
+    const ExtendLeftArrow = !loopImages ? currentIndexMatchLeftIndex(LeftArrow) : LeftArrow;
+    const ExtendRightArrow = !loopImages ? currentIndexMatchRightIndex(RightArrow) : RightArrow;
 
     const Lightbox = ({ lightboxImagesSrc, lightboxImages, onLeftArrowClick, onRightArrowClick }) =>
       isOpen && (
@@ -156,6 +175,8 @@ class ThumbnailGallery extends React.Component {
             <img
               src={`${lightboxImagesSrc}${lightboxImages}`}
               className="lightbox-img"
+              onLoad={this.onLightboxImageLoad}
+              width={this.state.imageWidth}
             />
           </div>
           <div className="navigation-container">
