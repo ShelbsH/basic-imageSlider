@@ -2,6 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import '../styles/components/Thumbnail_Gallery.scss';
 
+const Arrow = ({ arrowClass, onArrowClick }) => (
+  <i 
+    className={arrowClass} 
+    onClick={onArrowClick} 
+  />
+)
+
 class ThumbnailGallery extends React.Component {
   constructor(props) {
     super(props);
@@ -10,9 +17,13 @@ class ThumbnailGallery extends React.Component {
       index: null,
       isOpen: false,
       imageLength: null,
-      currentImage: '',
       loopImages: false
     };
+  }
+
+  static propTypes = {
+    images: PropTypes.array.isRequired,
+    loopImages: PropTypes.bool
   }
 
   componentWillMount() {
@@ -36,7 +47,6 @@ class ThumbnailGallery extends React.Component {
     if (!isOpen) {
       this.setState({
         isOpen: true,
-        currentImage: this.props.images[imageIndex],
         index: parseInt(imageIndex),
         imageLength: images.length
       });
@@ -121,35 +131,29 @@ class ThumbnailGallery extends React.Component {
   };
 
   matchIndex = ( currentIndex, imageIndex ) => currentIndex === imageIndex;
+  
+  LeftArrow = ({ onArrowLeftClick }) => (
+    <Arrow arrowClass="icon-keyboard_arrow_left" 
+      onArrowClick={onArrowLeftClick} 
+    />
+  )
+
+  RightArrow = ({ onArrowRightClick }) => (
+    <Arrow 
+      arrowClass="icon-keyboard_arrow_right" 
+      onArrowClick={onArrowRightClick} 
+    />
+  )
 
   render() {
+    const { LeftArrow, RightArrow } = this;
     const { images } = this.props;
-
     const { isOpen, 
             index, 
             imageLength,
             currentImage, 
             loopImages } = this.state;
-
-    const Arrow = ({ arrowClass, onArrowClick }) => (
-      <i 
-        className={arrowClass} 
-        onClick={onArrowClick} 
-      />
-    )
-
-    const LeftArrow = ({ onArrowLeftClick }) => (
-      <Arrow arrowClass="icon-keyboard_arrow_left" 
-        onArrowClick={onArrowLeftClick} 
-      />
-    )
-    const RightArrow = ({ onArrowRightClick }) => (
-      <Arrow 
-        arrowClass="icon-keyboard_arrow_right" 
-        onArrowClick={onArrowRightClick} 
-      />
-    )
-
+    
     /**
      * Use conditional rendering with HOC to determine if the 
      * current index does not match the first and last index
