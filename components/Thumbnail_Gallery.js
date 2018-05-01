@@ -1,9 +1,8 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import '../styles/components/Thumbnail_Gallery.scss';
-import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants';
 
-class ThumbnailGallery extends PureComponent {
+class ThumbnailGallery extends React.Component {
   constructor(props) {
     super(props);
 
@@ -11,7 +10,7 @@ class ThumbnailGallery extends PureComponent {
       index: null,
       isOpen: false,
       imageLength: null,
-      lightboxImages: props.lightboxImages,
+      currentImage: '',
       loopImages: false
     };
   }
@@ -29,15 +28,17 @@ class ThumbnailGallery extends PureComponent {
   componentWillUnmount() {
     document.removeEventListener('click', this.handleGlobalClick);
   }
-
-  openImage = ({ target, currentTarget: { dataset: { imageIndex } } }) => {
+  
+  openImage = ({ currentTarget: { dataset: { imageIndex } } }) => {
     const { isOpen, lightboxImages } = this.state;
+    const { images } = this.props;
 
     if (!isOpen) {
       this.setState({
         isOpen: true,
+        currentImage: this.props.images[imageIndex],
         index: parseInt(imageIndex),
-        imageLength: lightboxImages.length
+        imageLength: images.length
       });
     }
   };
@@ -119,19 +120,16 @@ class ThumbnailGallery extends PureComponent {
     }
   };
 
-  onLightboxImageLoad = ({ target }) => {
-    /**
-     * TODO: calculate the image dimensions so the image
-     * could fit directly on the screen if the original 
-     * image is bigger than the screen size
-     */
-  }
-
-  matchIndex = (currentIndex, imageIndex) => currentIndex === imageIndex;
+  matchIndex = ( currentIndex, imageIndex ) => currentIndex === imageIndex;
 
   render() {
-    const { lightboxImagesSrc, lightboxImages, thumbnailImagesSrc, thumbnailImages } = this.props;
-    const { isOpen, index, imageLength, loopImages } = this.state;
+    const { images } = this.props;
+
+    const { isOpen, 
+            index, 
+            imageLength,
+            currentImage, 
+            loopImages } = this.state;
 
     const Arrow = ({ arrowClass, onArrowClick }) => (
       <i 
@@ -157,40 +155,21 @@ class ThumbnailGallery extends PureComponent {
      * current index does not match the first and last index
      */
     
-    const currentIndexMatchLeftIndex = Component => props => (
+    const currentIndexMatchFirstIndex = Component => props => (
       !this.matchIndex(index, 0) && <Component {...props} />
     );
 
-    const currentIndexMatchRightIndex = Component => props => (
+    const currentIndexMatchLastIndex = Component => props => (
       !this.matchIndex((index + 1), imageLength) && <Component {...props} />
     );
     
-    const ExtendLeftArrow = !loopImages ? currentIndexMatchLeftIndex(LeftArrow) : LeftArrow;
-    const ExtendRightArrow = !loopImages ? currentIndexMatchRightIndex(RightArrow) : RightArrow;
-
-    const Lightbox = ({ lightboxImagesSrc, lightboxImages, onLeftArrowClick, onRightArrowClick }) =>
-      isOpen && (
-        <div className="lightbox-container">
-          <div className="lightbox-img-container">
-            <img
-              src={`${lightboxImagesSrc}${lightboxImages}`}
-              className="lightbox-img"
-              onLoad={this.onLightboxImageLoad}
-              width={this.state.imageWidth}
-            />
-          </div>
-          <div className="navigation-container">
-            <ExtendLeftArrow onArrowLeftClick={onLeftArrowClick}/>
-            <ExtendRightArrow onArrowRightClick={onRightArrowClick}/>
-          </div>
-          <div className="lightbox-overlay" />
-        </div>
-      );
+    const ExtendLeftArrow = !loopImages ? currentIndexMatchFirstIndex(LeftArrow) : LeftArrow;
+    const ExtendRightArrow = !loopImages ? currentIndexMatchLastIndex(RightArrow) : RightArrow;
 
     return (
       <div className="thumbnail-container">
         <div className="grid">
-          {thumbnailImages.map((list, index, array) => (
+          {images.map((list, index, array) => (
             <div
               className="cell"
               onClick={this.openImage}
@@ -198,18 +177,27 @@ class ThumbnailGallery extends PureComponent {
               data-image-index={index}
             >
               <img
-                src={`${thumbnailImagesSrc}${list}`}
+                src={`${list.thumbnailSrc}${list.thumbnail}`}
                 className="responsive-img image"
+                alt=''
               />
             </div>
           ))}
         </div>
-        <Lightbox
-          onLeftArrowClick={this.onLeftArrowClick}
-          onRightArrowClick={this.onRightArrowClick}
-          lightboxImagesSrc={lightboxImagesSrc || thumbnailImages}
-          lightboxImages={lightboxImages[index]}
-        />
+        {isOpen && (
+        <div className="lightbox-container">
+          <div className="lightbox-img-container">
+          <img src={`${images[index].lightboxImageSrc}${images[index].lightboxImage}`}
+            className="lightbox-img"
+          />
+          </div>
+          <div className="navigation-container">
+            <ExtendLeftArrow onArrowLeftClick={this.onLeftArrowClick}/>
+            <ExtendRightArrow onArrowRightClick={this.onRightArrowClick}/>
+          </div>
+          <div className="lightbox-overlay" />
+        </div>
+        )}
       </div>
     );
   }

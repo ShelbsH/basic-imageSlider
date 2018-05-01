@@ -9,20 +9,66 @@ export default class App extends React.Component {
     super(props);
   }
   render() {
+    const Images = [
+      {
+        thumbnail: 'blessthefall_thumbnail.png',
+        lightboxImage: 'blessthefall.png',
+        thumbnailSrc: '../Images/thumbnails/',
+        lightboxImageSrc: '../Images/'
+      },
+      {
+        thumbnail: 'The_Amity_Affliction_thumbnail.png',
+        lightboxImage: 'The_Amity_Affliction.png',
+        thumbnailSrc: '../Images/thumbnails/',
+        lightboxImageSrc: '../Images/'
+      },
+      {
+        thumbnail: 'Falling_In_Reverse_thumbnail.png',
+        lightboxImage: 'Falling_In_Reverse.png',
+        thumbnailSrc: '../Images/thumbnails/',
+        lightboxImageSrc: '../Images/'
+      },
+      {
+        thumbnail: 'Trivium_thumbnail.png',
+        lightboxImage: 'Trivium.png',
+        thumbnailSrc: '../Images/thumbnails/',
+        lightboxImageSrc: '../Images/'
+      },
+      {
+        thumbnail: 'miss_may_i_thumbnail.png',
+        lightboxImage: 'miss_may_i.png',
+        thumbnailSrc: '../Images/thumbnails/',
+        lightboxImageSrc: '../Images/'
+      },
+      {
+        thumbnail: 'august_burns_red_thumbnail.png',
+        lightboxImage: 'august_burns_red.png',
+        thumbnailSrc: '../Images/thumbnails/',
+        lightboxImageSrc: '../Images/'
+      },
+    ];
     return (
       <div className="flex-container">
         <div className="gallery-container">
           <h2 className="header">Thumbnail Gallery Demo</h2>
-          <ThumbnailGallery
-            thumbnailImagesSrc="../Images/thumbnails/"
-            lightboxImagesSrc="../Images/"
-            thumbnailImages={[
+          <ThumbnailGallery loopImages={true} images={Images} />
+        </div>
+      </div>
+    );
+  }
+}
+
+// [{thumbnail: 'image1_thumbnail.png, image: 'image1.png, thumbnailSrc: '../'}]
+
+/**
+ *  thumbnailImages={[
               'blessthefall_thumbnail.png',
               'The_Amity_Affliction_thumbnail.png',
               'Falling_In_Reverse_thumbnail.png',
               'Trivium_thumbnail.png',
               'miss_may_i_thumbnail.png',
-              'august_burns_red_thumbnail.png'
+              'august_burns_red_thumbnail.png',
+              '05_thumbnail.png'
             ]}
             lightboxImages={[
               'blessthefall.png',
@@ -30,12 +76,7 @@ export default class App extends React.Component {
               'Falling_In_Reverse.png',
               'Trivium.png',
               'miss_may_i.png',
-              'august_burns_red.png'
+              'august_burns_red.png',
+              '05.png'
             ]}
-            repeat={true}
-          />
-        </div>
-      </div>
-    );
-  }
-}
+ */

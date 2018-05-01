@@ -11,11 +11,12 @@
 }
 
 @mixin icon-arrow-position() {
-  font-size: 5rem;
+  font-size: 3rem;
   color: #000000;
   cursor: pointer;
   position: fixed;
   top: 50%;
+  margin-top: calc(-56px / 2); //Lower the arrows to be half on the screen
   z-index: 1205;
 }
 
@@ -48,23 +49,23 @@
     bottom: auto;
     z-index: 1000;
     transform: translate(-50%, -50%);
-    animation: fadeIn ease-out 0.7s;
+    transition: fadeIn ease-in-out 0.7s;
     .lightbox-img {
-      max-width: 100%;
       margin: 0;
       padding: 0;
+      max-width: 80vw;
+      max-height: 80vh;
       display: block;
     }
   }
   .navigation-container {
     .icon-keyboard_arrow_left {
-      z-index: auto;
       @include icon-arrow-position();
-      left: 0;
+      left: 0rem;
     }
     .icon-keyboard_arrow_right {
       @include icon-arrow-position();
-      right: 0;
+      right: 0rem;
     }
   }
   .lightbox-overlay {
