@@ -51,32 +51,11 @@ export default class App extends React.Component {
       <div className="flex-container">
         <div className="gallery-container">
           <h2 className="header">Thumbnail Gallery Demo</h2>
-          <ThumbnailGallery loopImages={true} images={Images} />
+          <ThumbnailGallery 
+            loopImages={true}
+            images={Images} />
         </div>
       </div>
     );
   }
 }
-
-// [{thumbnail: 'image1_thumbnail.png, image: 'image1.png, thumbnailSrc: '../'}]
-
-/**
- *  thumbnailImages={[
-              'blessthefall_thumbnail.png',
-              'The_Amity_Affliction_thumbnail.png',
-              'Falling_In_Reverse_thumbnail.png',
-              'Trivium_thumbnail.png',
-              'miss_may_i_thumbnail.png',
-              'august_burns_red_thumbnail.png',
-              '05_thumbnail.png'
-            ]}
-            lightboxImages={[
-              'blessthefall.png',
-              'The_Amity_Affliction.png',
-              'Falling_In_Reverse.png',
-              'Trivium.png',
-              'miss_may_i.png',
-              'august_burns_red.png',
-              '05.png'
-            ]}
- */
