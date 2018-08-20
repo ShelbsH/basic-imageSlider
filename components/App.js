@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import 'styles/components/app.scss';
+import 'styles/components/App.scss';
 
 import ThumbnailGallery from './Thumbnail_Gallery';
 

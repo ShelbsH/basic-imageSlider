@@ -7,7 +7,7 @@ const Arrow = ({ arrowClass, onArrowClick }) => (
     className={arrowClass} 
     onClick={onArrowClick} 
   />
-)
+);
 
 class ThumbnailGallery extends React.Component {
   constructor(props) {
@@ -70,17 +70,13 @@ class ThumbnailGallery extends React.Component {
   prevImage = () => {
     const { index, imageLength } = this.state;
     const lastImage = imageLength - 1;
+    let imageIndex = index < 1 ? lastImage : index - 1;
 
     //Set state to last image to loop the images
-    if (index < 1) {
-      this.setState({
-        index: lastImage
-      });
-    } else {
-      this.setState({
-        index: index - 1
-      });
-    }
+
+    this.setState({
+      index: imageIndex
+    });
   };
 
   isTargetClassName = (targetElement, list) => {
@@ -101,7 +97,8 @@ class ThumbnailGallery extends React.Component {
     const classNames = [
       'lightbox-img',
       'icon-keyboard_arrow_left',
-      'icon-keyboard_arrow_right'
+      'icon-keyboard_arrow_right',
+      'popAnimation'
     ];
 
     /**
@@ -153,6 +150,7 @@ class ThumbnailGallery extends React.Component {
             imageLength,
             currentImage, 
             loopImages } = this.state;
+    const imageData = images[index];
     
     /**
      * Use conditional rendering with HOC to determine if the 
@@ -182,7 +180,7 @@ class ThumbnailGallery extends React.Component {
             >
               <img
                 src={`${list.thumbnailSrc}${list.thumbnail}`}
-                className="responsive-img image"
+                className="image imageAnimation"
                 alt=''
               />
             </div>
@@ -191,8 +189,8 @@ class ThumbnailGallery extends React.Component {
         {isOpen && (
         <div className="lightbox-container">
           <div className="lightbox-img-container">
-          <img src={`${images[index].lightboxImageSrc}${images[index].lightboxImage}`}
-            className="lightbox-img"
+          <img src={`${imageData.lightboxImageSrc}${imageData.lightboxImage}`}
+            className={`lightbox-img ${isOpen ? 'popAnimation' : ''}`}
           />
           </div>
           <div className="navigation-container">
