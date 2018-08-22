@@ -45,15 +45,13 @@ export default class App extends React.Component {
         lightboxImage: 'august_burns_red.png',
         thumbnailSrc: '../Images/thumbnails/',
         lightboxImageSrc: '../Images/'
-      },
+      }
     ];
     return (
       <div className="flex-container">
         <div className="gallery-container">
           <h2 className="header">Thumbnail Gallery Demo</h2>
-          <ThumbnailGallery 
-            loopImages={true}
-            images={Images} />
+          <ThumbnailGallery images={Images} />
         </div>
       </div>
     );

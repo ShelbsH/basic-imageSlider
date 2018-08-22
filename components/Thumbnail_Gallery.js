@@ -3,15 +3,13 @@ import PropTypes from 'prop-types';
 import '../styles/components/Thumbnail_Gallery.scss';
 
 const Arrow = ({ arrowClass, onArrowClick }) => (
-  <i 
-    className={arrowClass} 
-    onClick={onArrowClick} 
-  />
+  <i className={arrowClass} onClick={onArrowClick} />
 );
 
 class ThumbnailGallery extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
+    document.addEventListener('click', this.handleGlobalClick);
 
     this.state = {
       index: null,
@@ -24,11 +22,9 @@ class ThumbnailGallery extends React.Component {
   static propTypes = {
     images: PropTypes.array.isRequired,
     loopImages: PropTypes.bool
-  }
+  };
 
-  componentWillMount() {
-    document.addEventListener('click', this.handleGlobalClick);
-
+  componentDidMount() {
     if (this.props.loopImages) {
       this.setState({
         loopImages: true
@@ -39,8 +35,12 @@ class ThumbnailGallery extends React.Component {
   componentWillUnmount() {
     document.removeEventListener('click', this.handleGlobalClick);
   }
-  
-  openImage = ({ currentTarget: { dataset: { imageIndex } } }) => {
+
+  openImage = ({
+    currentTarget: {
+      dataset: { imageIndex }
+    }
+  }) => {
     const { isOpen, lightboxImages } = this.state;
     const { images } = this.props;
 
@@ -61,7 +61,7 @@ class ThumbnailGallery extends React.Component {
 
   nextImage = () => {
     const { index, imageLength } = this.state;
-    
+
     this.setState({
       index: (index + 1) % imageLength
     });
@@ -127,51 +127,50 @@ class ThumbnailGallery extends React.Component {
     }
   };
 
-  matchIndex = ( currentIndex, imageIndex ) => currentIndex === imageIndex;
-  
+  matchIndex = (currentIndex, imageIndex) => currentIndex === imageIndex;
+
   LeftArrow = ({ onArrowLeftClick }) => (
-    <Arrow arrowClass="icon-keyboard_arrow_left" 
-      onArrowClick={onArrowLeftClick} 
+    <Arrow
+      arrowClass="icon-keyboard_arrow_left"
+      onArrowClick={onArrowLeftClick}
     />
-  )
+  );
 
   RightArrow = ({ onArrowRightClick }) => (
-    <Arrow 
-      arrowClass="icon-keyboard_arrow_right" 
-      onArrowClick={onArrowRightClick} 
+    <Arrow
+      arrowClass="icon-keyboard_arrow_right"
+      onArrowClick={onArrowRightClick}
     />
-  )
+  );
 
   render() {
     const { LeftArrow, RightArrow } = this;
     const { images } = this.props;
-    const { isOpen, 
-            index, 
-            imageLength,
-            currentImage, 
-            loopImages } = this.state;
+    const { isOpen, index, imageLength, currentImage, loopImages } = this.state;
     const imageData = images[index];
-    
+
     /**
-     * Use conditional rendering with HOC to determine if the 
+     * Use conditional rendering with HOC to determine if the
      * current index does not match the first and last index
      */
-    
-    const currentIndexMatchFirstIndex = Component => props => (
-      !this.matchIndex(index, 0) && <Component {...props} />
-    );
 
-    const currentIndexMatchLastIndex = Component => props => (
-      !this.matchIndex((index + 1), imageLength) && <Component {...props} />
-    );
-    
-    const ExtendLeftArrow = !loopImages ? currentIndexMatchFirstIndex(LeftArrow) : LeftArrow;
-    const ExtendRightArrow = !loopImages ? currentIndexMatchLastIndex(RightArrow) : RightArrow;
+    const currentIndexMatchFirstIndex = Component => props =>
+      !this.matchIndex(index, 0) && <Component {...props} />;
+
+    const currentIndexMatchLastIndex = Component => props =>
+      !this.matchIndex(index + 1, imageLength) && <Component {...props} />;
+
+    const ExtendLeftArrow = !loopImages
+      ? currentIndexMatchFirstIndex(LeftArrow)
+      : LeftArrow;
+    const ExtendRightArrow = !loopImages
+      ? currentIndexMatchLastIndex(RightArrow)
+      : RightArrow;
 
     return (
       <div className="thumbnail-container">
         <div className="grid">
-          {images.map((list, index, array) => (
+          {images.map((list, index) => (
             <div
               className="cell"
               onClick={this.openImage}
@@ -181,24 +180,25 @@ class ThumbnailGallery extends React.Component {
               <img
                 src={`${list.thumbnailSrc}${list.thumbnail}`}
                 className="image imageAnimation"
-                alt=''
+                alt=""
               />
             </div>
           ))}
         </div>
         {isOpen && (
-        <div className="lightbox-container">
-          <div className="lightbox-img-container">
-          <img src={`${imageData.lightboxImageSrc}${imageData.lightboxImage}`}
-            className={`lightbox-img ${isOpen ? 'popAnimation' : ''}`}
-          />
+          <div className="lightbox-container">
+            <div className="lightbox-img-container">
+              <img
+                src={`${imageData.lightboxImageSrc}${imageData.lightboxImage}`}
+                className={`lightbox-img ${isOpen ? 'popAnimation' : ''}`}
+              />
+            </div>
+            <div className="navigation-container">
+              <ExtendLeftArrow onArrowLeftClick={this.onLeftArrowClick} />
+              <ExtendRightArrow onArrowRightClick={this.onRightArrowClick} />
+            </div>
+            <div className="lightbox-overlay" />
           </div>
-          <div className="navigation-container">
-            <ExtendLeftArrow onArrowLeftClick={this.onLeftArrowClick}/>
-            <ExtendRightArrow onArrowRightClick={this.onRightArrowClick}/>
-          </div>
-          <div className="lightbox-overlay" />
-        </div>
         )}
       </div>
     );
