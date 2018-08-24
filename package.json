@@ -1,7 +1,7 @@
 {
-  "name": "react-boilerplate",
+  "name": "react-thumbnail-gallery",
   "version": "1.0.0",
-  "description": "A React Boilerplate that uses Webpack 3, ExpressJS, HMR, and Jest for unit testing",
+  "description": "A basic thumbnail gallery that you can create using React",
   "main": "index.js",
   "author": "Shelby Hurns",
   "license": "MIT",
@@ -43,6 +43,7 @@
   },
   "jest": {
     "setupTestFrameworkScriptFile": "./tests/test_setup",
+    "collectCoverage": true,
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
     },

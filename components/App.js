@@ -1,7 +1,7 @@
 import React from 'react';
 import 'styles/components/App.scss';
 
-import ImageGrid from './Thumbnail_Gallery';
+import ThumbnailGallery from './Thumbnail_Gallery';
 
 const Images = [
   {
@@ -46,7 +46,7 @@ const App = () => (
   <div className="flex-container">
     <div className="gallery-container">
       <h2 className="header">Thumbnail Gallery Demo</h2>
-      <ImageGrid images={Images} loopImages />
+      <ThumbnailGallery images={Images} loopImages />
     </div>
   </div>
 );
