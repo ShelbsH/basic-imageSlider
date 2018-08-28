@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 const Arrow = ({ arrowClass, ...rest }) => (
@@ -35,34 +36,17 @@ class Lightbox extends React.Component {
     document.removeEventListener('click', this.handleGlobalClick);
   }
 
-  isTargetClassName = (targetElement, list) => {
-    let isTrue = false;
-
-    list.forEach(item => {
-      if (targetElement.className === item) {
-        isTrue = true;
-      }
-    });
-
-    return isTrue;
-  };
-
-  handleGlobalClick = ({ target }) => {
+  handleGlobalClick = ({ target, currentTarget }) => {
     const { open } = this.props;
-    const { isTargetClassName } = this;
-    const classNames = [
-      'lightbox-img',
-      'icon-keyboard_arrow_left',
-      'icon-keyboard_arrow_right',
-      'popAnimation'
-    ];
+    const islightboxOverlay = target.className === 'lightbox-overlay';
+    const lightboxWrapper = ReactDOM.findDOMNode(this);
 
     /**
      * Close the displayed image if the click doesn't match
      * any of the target className elements
      */
 
-    if (open && !isTargetClassName(target, classNames)) {
+    if ((open && !lightboxWrapper.contains(target)) || islightboxOverlay) {
       this.props.onClose();
     }
   };

@@ -15,9 +15,8 @@ class ThumbnailGallery extends React.Component {
   };
 
   openImage = ({
-    currentTarget: {
-      dataset: { imageIndex }
-    }
+    
+    currentTarget
   }) => {
     const { images } = this.props;
     const { open } = this.state;
@@ -25,7 +24,7 @@ class ThumbnailGallery extends React.Component {
     if (!open) {
       this.setState({
         open: true,
-        atIndex: parseInt(imageIndex),
+        atIndex: parseInt(currentTarget.getAttribute('data-image-index')),
         imageLength: images.length
       });
     }

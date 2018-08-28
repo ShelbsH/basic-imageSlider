@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "node index-server.js",
     "prod": "webpack --config webpack.config.prod.js",
-    "test": "jest"
+    "test": "jest --watch --verbose"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
