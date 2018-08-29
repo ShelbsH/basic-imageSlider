@@ -36,8 +36,8 @@ class Lightbox extends React.Component {
     document.removeEventListener('click', this.handleGlobalClick);
   }
 
-  handleGlobalClick = ({ target, currentTarget }) => {
-    const { open } = this.props;
+  handleGlobalClick = ({ target }) => {
+    const { open, onClose } = this.props;
     const islightboxOverlay = target.className === 'lightbox-overlay';
     const lightboxWrapper = ReactDOM.findDOMNode(this);
 
@@ -47,7 +47,7 @@ class Lightbox extends React.Component {
      */
 
     if ((open && !lightboxWrapper.contains(target)) || islightboxOverlay) {
-      this.props.onClose();
+      onClose();
     }
   };
 

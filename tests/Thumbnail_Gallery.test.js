@@ -1,8 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
-import { mount } from 'enzyme';
+import ReactDOM from 'react-dom';
+import { mount, shallow } from 'enzyme';
 import ThumbnailGallery from '../components/Thumbnail_Gallery';
 import Lightbox from '../components/Lightbox';
+import App from '../components/App';
 
 const Images = [
   {
@@ -47,7 +48,6 @@ describe('Thumbnail Gallery', () => {
     const thumbnailContainer = thumbnailGallery().find(
       'div.thumbnail-container'
     );
-
     expect(thumbnailContainer.length).toEqual(1);
   });
 
@@ -73,6 +73,22 @@ describe('Thumbnail Gallery', () => {
       thumbnailContainer.simulate('click');
       const lightbox = thumbnailGallery().find(Lightbox);
       expect(lightbox.exists()).toBe(true);
+    });
+    it('unmounts the `Lightbox` component when one of the images are clicked', () => {});
+  });
+
+  describe('when the lightbox current image changes', () => {
+    it('should display the next image', () => {
+      const thumbnailContainer = thumbnailGallery()
+        .find('div.cell')
+        .first();
+      thumbnailContainer.simulate('click');
+      const lightbox = thumbnailGallery().find(Lightbox);
+      const nextArrow = lightbox.find('i.icon-keyboard_arrow_right');
+      const lightboxImage = lightbox.find('img').prop('src');
+      nextArrow.simulate('click');
+      console.log(nextArrow);
+      expect(lightboxImage).toEqual('../Images/orange.png');
     });
   });
 });
