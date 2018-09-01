@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Lightbox from './Lightbox';
-import '../styles/components/ThumbnailGallery.scss'
+import '../styles/components/ThumbnailGallery.scss';
 
 class ThumbnailGallery extends React.Component {
   state = {
@@ -14,10 +14,7 @@ class ThumbnailGallery extends React.Component {
     images: PropTypes.array.isRequired
   };
 
-  openImage = ({
-    
-    currentTarget
-  }) => {
+  openImage = ({ currentTarget }) => {
     const { images } = this.props;
     const { open } = this.state;
 
@@ -73,8 +70,15 @@ class ThumbnailGallery extends React.Component {
 
   render() {
     const { open, atIndex } = this.state;
-    const { images, loopImages } = this.props;
+    const { images } = this.props;
     const imageData = images[atIndex];
+    let lightboxImageSrc;
+
+    if (imageData) {
+      lightboxImageSrc = `${imageData.lightboxImageSrc}${
+        imageData.lightboxImage
+      }`;
+    }
 
     return (
       <div className="thumbnail-container">
@@ -94,20 +98,14 @@ class ThumbnailGallery extends React.Component {
             </div>
           ))}
         </div>
-        {open && (
-          <Lightbox
-            images={images}
-            lightboxImageSrc={`${imageData.lightboxImageSrc}${
-              imageData.lightboxImage
-            }`}
-            atIndex={atIndex}
-            open={open}
-            onNextImage={this.onRightArrowClick}
-            onPrevImage={this.onLeftArrowClick}
-            onClose={this.closeImage}
-            loopImages={loopImages}
-          />
-        )}
+        <Lightbox
+          images={images}
+          lightboxImageSrc={lightboxImageSrc}
+          open={open}
+          onNextImage={this.onRightArrowClick}
+          onPrevImage={this.onLeftArrowClick}
+          onClose={this.closeImage}
+        />
       </div>
     );
   }

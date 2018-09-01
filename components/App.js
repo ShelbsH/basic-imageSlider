@@ -46,7 +46,7 @@ const App = () => (
   <div className="flex-container">
     <div className="gallery-container">
       <h2 className="header">Thumbnail Gallery Demo</h2>
-      <ThumbnailGallery images={Images} loopImages />
+      <ThumbnailGallery images={Images} />
     </div>
   </div>
 );
