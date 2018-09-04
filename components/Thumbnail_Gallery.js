@@ -44,28 +44,12 @@ class ThumbnailGallery extends React.Component {
   prevImage = () => {
     const { atIndex, imageLength } = this.state;
     const lastImage = imageLength - 1;
+    //Set state to last image to loop the images
     let imageIndex = atIndex < 1 ? lastImage : atIndex - 1;
 
-    //Set state to last image to loop the images
     this.setState({
       atIndex: imageIndex
     });
-  };
-
-  onLeftArrowClick = () => {
-    const { open } = this.state;
-
-    if (open) {
-      this.prevImage();
-    }
-  };
-
-  onRightArrowClick = () => {
-    const { open } = this.state;
-
-    if (open) {
-      this.nextImage();
-    }
   };
 
   render() {
@@ -79,7 +63,7 @@ class ThumbnailGallery extends React.Component {
         imageData.lightboxImage
       }`;
     }
-
+    
     return (
       <div className="thumbnail-container">
         <div className="grid">
@@ -98,14 +82,14 @@ class ThumbnailGallery extends React.Component {
             </div>
           ))}
         </div>
-        <Lightbox
+        {open && <Lightbox
           images={images}
           lightboxImageSrc={lightboxImageSrc}
           open={open}
-          onNextImage={this.onRightArrowClick}
-          onPrevImage={this.onLeftArrowClick}
+          onNextImage={this.nextImage}
+          onPrevImage={this.prevImage}
           onClose={this.closeImage}
-        />
+        />}
       </div>
     );
   }

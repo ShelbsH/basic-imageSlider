@@ -32,7 +32,7 @@ const Arrows = ({ onPrevImage, onNextImage }) => (
 
 class Lightbox extends React.Component {
   static propTypes = {
-    images: PropTypes.object.isRequired,
+    images: PropTypes.array.isRequired,
     loopImages: PropTypes.bool,
     onPrevImage: PropTypes.func.isRequired,
     onNextImage: PropTypes.func.isRequired,
@@ -41,15 +41,11 @@ class Lightbox extends React.Component {
   };
 
   componentDidMount() {
-    document.addEventListener('mouseup', this.handleGlobalClick);
+    document.addEventListener('click', this.handleGlobalClick);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mouseup', this.handleGlobalClick);
-
-    if(this.props.open) {
-      this.props.onClose();
-    }
+    document.removeEventListener('click', this.handleGlobalClick);
   }
 
   handleGlobalClick = ({ target }) => {
@@ -61,8 +57,8 @@ class Lightbox extends React.Component {
      * Close the displayed image if the click doesn't match
      * any of the target className elements
      */
-    if ((open && !lightboxWrapper.contains(target)) || islightboxOverlay) {
-      onClose();
+    if (!lightboxWrapper.contains(target) || islightboxOverlay) {
+      onClose(target);
     }
   };
 
@@ -70,14 +66,14 @@ class Lightbox extends React.Component {
     const { open, lightboxImageSrc, ...arrows } = this.props;
 
     return (
-      open && (
-        <LightboxContainer lightboxImageSrc={lightboxImageSrc}>
-          <Arrows {...arrows} />
-          <div className="lightbox-overlay" />
-        </LightboxContainer>
-      )
+      <LightboxContainer lightboxImageSrc={lightboxImageSrc}>
+        <Arrows {...arrows} />
+        <div className="lightbox-overlay" />
+      </LightboxContainer>
     );
   }
 }
+
+Lightbox.defaultProps = {};
 
 export default Lightbox;

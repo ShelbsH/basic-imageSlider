@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { mount, shallow } from 'enzyme';
 import ThumbnailGallery from '../components/Thumbnail_Gallery';
 import Lightbox from '../components/Lightbox';
-import App from '../components/App';
 
 const Images = [
   {
@@ -60,7 +58,6 @@ describe('Thumbnail Gallery', () => {
   describe('when the `Lightbox` component is not rendered', () => {
     it('should not be rendered if none of the images are clicked', () => {
       const lightbox = thumbnailGallery().find(Lightbox);
-      console.log(thumbnailGallery().debug());
       expect(lightbox.exists()).toBe(false);
     });
   });
@@ -78,8 +75,6 @@ describe('Thumbnail Gallery', () => {
   });
 
   describe('when the lightbox current image changes', () => {
-    it('should display the next image', () => {
-      
-    });
+    it('should display the next image', () => {});
   });
 });
